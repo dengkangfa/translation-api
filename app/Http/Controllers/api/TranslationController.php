@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Hash;
 use Validator;
 use App\Translation;
 use Illuminate\Http\Request;
@@ -14,7 +15,6 @@ class TranslationController extends ApiController
     {
         $validator = Validator::make($request->all(), [
             'type' => 'required',
-            'password' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -45,8 +45,10 @@ class TranslationController extends ApiController
                 ];
         }
 
+        $data['password'] = $request->password ? bcrypt($request->password) : '';
+
         $model = Translation::create($data);
-        $url = config('app.url') . '/api/v1/translation/' . $model->id;
+        $url = config('app.url') . '/translation/' . $model->id;
         return $this->responseSuccess($url);
     }
 
@@ -63,6 +65,23 @@ class TranslationController extends ApiController
         $filename = time() . '.' . $file->getClientOriginalExtension() ?: 'png';
         $file->move($folderName, $filename);
         return config('app.url') . '/' . $folderName . $filename;
+    }
+
+    public function checkPasswordView($id)
+    {
+        return view('check_password', compact('id'));
+    }
+
+    public function checkPassword(Request $request)
+    {
+        $id = $request->get('id');
+        $translation = Translation::findOrFail($id);
+        if (Hash::check($request->get('password'), $translation->password)) {
+            $request->session()->push('user.translation', $id);
+            return redirect()->route('translation.show', $id);
+        } else {
+            return redirect()->back()->withErrors(['password' => '密码错误']);
+        }
     }
 
 }

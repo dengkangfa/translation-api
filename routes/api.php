@@ -18,6 +18,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'v1'], function () {
-    Route::resource('lesson', 'Api\LessonController');
-    Route::resource('translation', 'Api\TranslationController');
+//    Route::resource('lesson', 'Api\LessonController');
+//    Route::get('translation/{id}', 'Api\TranslationController@show')->name('translation.show ')->middleware('checkPassword');
+//    Route::resource('translation', 'Api\TranslationController');
+    Route::post('translation', 'Api\TranslationController@store');
 });

@@ -11,8 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    echo 0.1+0.2;
-    echo 0.1+0.2-0.3;
-    return view('welcome');
-});
+//Route::get('/', function () {
+//    return view('welcome');
+//});
+Route::get('translation/{id}', 'Api\TranslationController@show')->name('translation.show')->middleware('checkPassword');
+Route::get('translation/{id}/check_password', 'Api\TranslationController@checkPasswordView')->name('translation.checkPasswordView');
+Route::post('translation/check_password', 'Api\TranslationController@checkPassword')->name('translation.checkPassword');
