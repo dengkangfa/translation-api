@@ -18,7 +18,7 @@ class CheckPassword
     {
         $id = $request->id;
         $translation = Translation::findorFail($id);
-        $idArr = $request->session()->get('user.translation');
+        $idArr = $request->session()->get('user.translation') ?: [];
         if( empty($translation->password) || in_array($id, $idArr)) {
                 return $next($request);
         }
