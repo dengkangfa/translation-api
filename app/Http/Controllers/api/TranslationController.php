@@ -35,13 +35,15 @@ class TranslationController extends ApiController
         if($request->get('type') == 'text'){
             $data['original'] = ['text' => $request->get('text')];
         } elseif ($request->get('type') == 'img') {
-            $path = $this->upload($request->file('img'));
-            $data['original'] = ['img' => $path];
+//            $path = $this->upload($request->file('img'));
+            $base64 = $request->get('img');
+            $data['original'] = ['img' => $base64];
         } else {
-            $path = $this->upload($request->file('img'));
+//            $path = $this->upload($request->file('img'));
+            $base64 = $request->get('img');
             $data['original'] = [
                     'text' => $request->get('text'),
-                    'img' => $path
+                    'img' => $base64
                 ];
         }
 
